@@ -1,0 +1,34 @@
+{
+    "name": "tautvydasr/blade-class-names",
+    "description": "Package for handling html classes output based on conditions",
+    "keywords": [
+        "class-names",
+        "laravel",
+        "blade"
+    ],
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tautvydas Rasimavicius",
+            "email": "tautvydas.rasimavicius@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "ClassNames\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "tests/"
+        }
+    }
+}
