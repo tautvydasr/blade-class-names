@@ -56,4 +56,10 @@ class ClassNamesTest extends TestCase
         $result = $this->classes->render(['a' => true], ['a' => true, 'b' => true], 'b');
         $this->assertEquals('a b', $result);
     }
+
+    public function testClassesEscapedUsingHtmlContext(): void
+    {
+        $result = $this->classes->render('&',  '"', "'", '<', '>');
+        $this->assertEquals('&amp; &quot; &#039; &lt; &gt;', $result);
+    }
 }

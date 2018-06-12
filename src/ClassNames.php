@@ -8,7 +8,7 @@ class ClassNames
 
     public function render(...$classes): string
     {
-        return collect($classes)
+        $classes = collect($classes)
             ->map(function ($class) {
                 return is_array($class) ? collect($class)->filter()->keys() : (string)$class;
             })
@@ -17,5 +17,7 @@ class ClassNames
             ->unique()
             ->implode(self::GLUE)
         ;
+
+        return e($classes);
     }
 }
