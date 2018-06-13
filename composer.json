@@ -6,7 +6,6 @@
         "laravel",
         "blade"
     ],
-    "type": "project",
     "license": "MIT",
     "support": {
         "source": "https://github.com/tautvydasr/blade-class-names",
