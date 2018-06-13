@@ -7,6 +7,8 @@ use Illuminate\Support\ServiceProvider;
 
 class ClassNamesServiceProvider extends ServiceProvider
 {
+    const ALIAS = 'classnames';
+
     public function boot(): void
     {
         $this->registerClassNames();
@@ -15,15 +17,16 @@ class ClassNamesServiceProvider extends ServiceProvider
 
     protected function registerClassNames(): void
     {
-        $this->app->singleton(ClassNames::class, function (): ClassNames {
+        $this->app->singleton(self::ALIAS, function (): ClassNames {
             return new ClassNames();
         });
+        $this->app->alias(self::ALIAS, ClassNames::class);
     }
 
     protected function registerBladeDirective(): void
     {
         Blade::directive('classNames', function (string $expression): string {
-            return "<?php echo app(ClassNames\ClassNames::class)->render($expression); ?>";
+            return "<?php echo ClassNames\ClassNamesFacade::render($expression); ?>";
         });
     }
 }
