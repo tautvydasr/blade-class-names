@@ -8,6 +8,10 @@
     ],
     "type": "project",
     "license": "MIT",
+    "support": {
+        "source": "https://github.com/tautvydasr/blade-class-names",
+        "issues": "https://github.com/tautvydasr/blade-class-names/issues"
+    },
     "authors": [
         {
             "name": "Tautvydas Rasimavicius",
