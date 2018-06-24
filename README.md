@@ -12,7 +12,7 @@ First of all require this package in composer:
 composer require tautvydasr/blade-class-names
 ```
 
-Finally, add service provider to `providers` array in your `config/app.php` file:
+Finally, add service provider to `providers` array in your `config/app.php` file for Laravel:
 
 ```php
 'providers' => [
@@ -20,6 +20,14 @@ Finally, add service provider to `providers` array in your `config/app.php` file
     ClassNames\ClassNamesServiceProvider::class,
     // ...
 ],
+```
+
+or register service provider in `bootstrap/app.php` if using Lumen:
+
+```php
+...
+$app->register(\ClassNames\ClassNamesServiceProvider::class);
+...
 ```
 
 ## Usage
@@ -32,13 +40,26 @@ Basically package allows you to simplify conditional classes situations like thi
 </a>
 ``` 
 
-to this using blade directive `@classNames()`
+to this using blade directive `@classNames()`.
 
 ```blade
 <a href="#" class="@classNames('menu-item', ['first-item' => $loop->first, 'active' => request()->routeIs('foo')])">
     ...
 </a>
 ``` 
+
+For Lumen users it can be accessed via `app()` helper or facade.
+
+```blade
+<a href="#" class="app('classnames')->render('menu-item', ['first-item' => $loop->first, 'active' => request()->routeIs('foo')])">
+    ...
+</a>
+
+<a href="#" class="\ClassNames\ClassNamesFacade::render('menu-item', ['first-item' => $loop->first, 'active' => request()->routeIs('foo')])">
+    ...
+</a>
+```
+Using facade approach make sure the line `$app->withFacades();` is uncommented in `bootstrap/app.php` file.
 
 ## Local setup
 
