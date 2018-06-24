@@ -12,7 +12,10 @@ class ClassNamesServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerClassNames();
-        $this->registerBladeDirective();
+
+        if ($this->isBladeEnabled()) {
+            $this->registerBladeDirective();
+        }
     }
 
     protected function registerClassNames(): void
@@ -28,5 +31,10 @@ class ClassNamesServiceProvider extends ServiceProvider
         Blade::directive('classNames', function (string $expression): string {
             return "<?php echo ClassNames\ClassNamesFacade::render($expression); ?>";
         });
+    }
+
+    public function isBladeEnabled(): bool
+    {
+        return $this->app->has('blade.compiler');
     }
 }
