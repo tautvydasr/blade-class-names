@@ -42,6 +42,5 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "stability-flags": []
+    "minimum-stability": "stable"
 }
