@@ -2,7 +2,9 @@
 
 [![Build Status](https://github.com/tautvydasr/blade-class-names/workflows/tests/badge.svg?branch=master)](https://github.com/tautvydasr/blade-class-names/actions)
 
-Simple package which helps to handle conditional html classes in blade templates.  
+Simple package which helps to handle conditional html classes in blade templates.
+
+**NOTICE:** If Laravel 8 or later is used consider using native [`@class` directive](https://laravel.com/docs/blade#conditional-classes) instead. 
 
 ## Installation
 
