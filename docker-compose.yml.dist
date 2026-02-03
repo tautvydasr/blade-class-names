@@ -3,7 +3,7 @@ version: "3.1"
 services:
   php:
     build: .
-    image: phpdockerio/php72-cli
+    image: phpdockerio/php82-cli
     working_dir: /application
     volumes:
       - .:/application
