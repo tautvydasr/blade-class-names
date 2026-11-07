@@ -1,6 +1,6 @@
 # Blade class names
 
-[![Build Status](https://github.com/tautvydasr/blade-class-names/workflows/tests/badge.svg?branch=master)](https://github.com/tautvydasr/blade-class-names/actions)
+[![Tests](https://github.com/tautvydasr/blade-class-names/actions/workflows/tests.yml/badge.svg)](https://github.com/tautvydasr/blade-class-names/actions/workflows/tests.yml)
 
 Simple package which helps to handle conditional html classes in blade templates.
 
