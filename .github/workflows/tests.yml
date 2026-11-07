@@ -1,4 +1,4 @@
-name: tests
+name: Tests
 
 on:
   push:
@@ -6,39 +6,74 @@ on:
   pull_request:
     branches: [master]
 
-jobs:
-  linux_tests:
-    runs-on: ubuntu-latest
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
+jobs:
+  get-php-versions:
+    name: Get PHP versions
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.drop-versions.outputs.versions }}
+    steps:
+      - name: Checkout composer.json
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            composer.json
+
+      - name: Get PHP versions from composer.json
+        id: php-versions
+        uses: antfroger/php-version-action@v1
+        with:
+          unstable: true
+
+      - name: Drop unsupported/unwanted versions
+        id: drop-versions
+        run: |
+          # Exclude PHP 8.2 and output to 'versions' to match job outputs
+          FILTERED=$(echo '${{ steps.php-versions.outputs.matrix }}' | jq -c 'map(select(. != "8.2"))')
+          echo "versions=$FILTERED" >> $GITHUB_OUTPUT
+
+  linux-tests:
+    name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
+    needs: get-php-versions
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.3', '8.4', '8.5']
+        php: ${{ fromJson(needs.get-php-versions.outputs.versions) }}
         stability: [prefer-lowest, prefer-stable]
-
-    name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, mbstring
           tools: composer:v2
-          coverage: none
+          coverage: pcov
 
       - name: Validate composer.json and composer.lock
-        run: composer validate
+        run: composer validate --strict
 
       - name: Install dependencies
-        uses: nick-invision/retry@v1
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
-          max_attempts: 5
-          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
+          max_attempts: 3
+          command: |
+            # For 'prefer-lowest', we run 'composer update' to ignore the lock file 
+            # and pull the minimum allowed versions defined in composer.json.
+            # For 'prefer-stable', we run 'composer install' to respect exact versions in composer.lock.
+
+            if [ "${{ matrix.stability }}" = "prefer-lowest" ]; then
+              composer update --prefer-lowest --prefer-dist --no-interaction --no-progress
+            else
+              composer install --prefer-dist --no-interaction --no-progress
+            fi
 
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --coverage-text
